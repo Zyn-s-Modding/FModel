@@ -1,0 +1,112 @@
+<Application xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="FModel.Desktop.DesktopApp">
+  <Application.Resources>
+    <!-- Palette from FModel.AdonisUI 1.18.0, with FModel's application accent. -->
+    <Color x:Key="SystemAccentColor">#206BD4</Color>
+    <SolidColorBrush x:Key="Layer0">#2A2B34</SolidColorBrush>
+    <SolidColorBrush x:Key="Layer1">#3D3D4C</SolidColorBrush>
+    <SolidColorBrush x:Key="Layer2">#32323F</SolidColorBrush>
+    <SolidColorBrush x:Key="Layer3">#262630</SolidColorBrush>
+    <SolidColorBrush x:Key="Layer4">#323341</SolidColorBrush>
+    <SolidColorBrush x:Key="Border1">#4A4A5E</SolidColorBrush>
+    <SolidColorBrush x:Key="Border2">#272730</SolidColorBrush>
+    <SolidColorBrush x:Key="Border3">#1F2029</SolidColorBrush>
+    <SolidColorBrush x:Key="Foreground">#F0F0F0</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlBackground">#262630</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver">#262630</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlBackgroundFocused">#262630</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlBorderBrush">#484B60</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver">#717590</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlForeground">#F0F0F0</SolidColorBrush>
+    <SolidColorBrush x:Key="TextControlForegroundFocused">#F0F0F0</SolidColorBrush>
+    <SolidColorBrush x:Key="ComboBoxBackground">#32323F</SolidColorBrush>
+    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver">#3D3D4C</SolidColorBrush>
+    <SolidColorBrush x:Key="ComboBoxDropDownBackground">#262630</SolidColorBrush>
+    <SolidColorBrush x:Key="ComboBoxBorderBrush">#585871</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutPresenterBackground">#32323F</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutPresenterBorderBrush">#4A4A5E</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuFlyoutItemBackgroundPointerOver">#3D3D4C</SolidColorBrush>
+    <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush">#55206BD4</SolidColorBrush>
+  </Application.Resources>
+  <Application.Styles>
+    <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml"/>
+    <Style Selector="Window">
+      <Setter Property="FontFamily" Value="{DynamicResource FModelUiFont}"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Foreground" Value="{StaticResource Foreground}"/>
+      <Setter Property="Background" Value="{StaticResource Layer0}"/>
+    </Style>
+    <Style Selector="Menu"><Setter Property="Background" Value="{StaticResource Layer0}"/><Setter Property="Padding" Value="0"/></Style>
+    <Style Selector="MenuItem"><Setter Property="Padding" Value="8,4"/><Setter Property="FontSize" Value="12"/></Style>
+    <Style Selector="Button">
+      <Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="8,3"/>
+      <Setter Property="Background" Value="{StaticResource Layer2}"/><Setter Property="BorderBrush" Value="#585871"/>
+      <Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/><Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Template"><ControlTemplate><Border x:Name="buttonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="{TemplateBinding CornerRadius}"><ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/></Border></ControlTemplate></Setter>
+    </Style>
+    <Style Selector="Button:pointerover"><Setter Property="Background" Value="#3D3D4C"/><Setter Property="BorderBrush" Value="#7B7B99"/></Style>
+    <Style Selector="Button:pressed"><Setter Property="Background" Value="#454555"/><Setter Property="BorderBrush" Value="#206BD4"/></Style>
+    <Style Selector="Button:disabled"><Setter Property="Opacity" Value="0.5"/></Style>
+    <Style Selector="Button.icon"><Setter Property="Width" Value="26"/><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="4"/><Setter Property="MinWidth" Value="0"/></Style>
+    <Style Selector="Button.toolbar"><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="Button.toolbar:pointerover"><Setter Property="Background" Value="#3B3D4A"/></Style>
+    <Style Selector="Button.close"><Setter Property="Width" Value="12"/><Setter Property="Height" Value="12"/><Setter Property="MinHeight" Value="0"/><Setter Property="Padding" Value="0"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="#585871"/><Setter Property="CornerRadius" Value="5"/><Setter Property="FontSize" Value="10"/></Style>
+    <Style Selector="ToggleButton">
+      <Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="6,3"/><Setter Property="CornerRadius" Value="0"/>
+      <Setter Property="Background" Value="{StaticResource Layer2}"/><Setter Property="BorderBrush" Value="#585871"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Template"><ControlTemplate><Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" CornerRadius="{TemplateBinding CornerRadius}"><ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/></Border></ControlTemplate></Setter>
+    </Style>
+    <Style Selector="ToggleButton:pointerover"><Setter Property="Background" Value="#3D3D4C"/></Style>
+    <Style Selector="ToggleButton:checked"><Setter Property="Background" Value="#3B3D4A"/><Setter Property="BorderBrush" Value="#206BD4"/></Style>
+    <Style Selector="TextBox"><Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="5,2"/><Setter Property="CornerRadius" Value="0"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CaretBrush" Value="#F0F0F0"/></Style>
+    <Style Selector="ComboBox"><Setter Property="MinHeight" Value="24"/><Setter Property="Padding" Value="5,2"/><Setter Property="CornerRadius" Value="0"/></Style>
+    <Style Selector="AutoCompleteBox /template/ Border"><Setter Property="CornerRadius" Value="0"/></Style>
+    <Style Selector="Expander /template/ ToggleButton">
+      <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="0"/><Setter Property="MinHeight" Value="16"/><Setter Property="Height" Value="16"/>
+      <Setter Property="Template"><ControlTemplate><Border Background="Transparent"><Path x:Name="expandArrow" Width="8" Height="5" Stretch="Fill" Data="M0 0 L4 5 L8 0" Stroke="#F0F0F0" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="50%,50%"/></Border></ControlTemplate></Setter>
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:checked /template/ Path#expandArrow"><Setter Property="RenderTransform"><RotateTransform Angle="180"/></Setter></Style>
+    <Style Selector="TabControl">
+      <Setter Property="Background" Value="{StaticResource Layer2}"/><Setter Property="BorderBrush" Value="{StaticResource Border2}"/><Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Template"><ControlTemplate>
+        <Grid RowDefinitions="Auto,*" Background="{TemplateBinding Background}">
+          <ItemsPresenter x:Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}"/>
+          <Border Grid.Row="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="5">
+            <ContentPresenter x:Name="PART_SelectedContentHost" Content="{TemplateBinding SelectedContent}" ContentTemplate="{TemplateBinding SelectedContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+          </Border>
+        </Grid>
+      </ControlTemplate></Setter>
+    </Style>
+    <Style Selector="TabControl#LeftTabs"><Setter Property="ItemsPanel"><ItemsPanelTemplate><UniformGrid Rows="1"/></ItemsPanelTemplate></Setter></Style>
+    <Style Selector="TabControl#SettingsPages">
+      <Setter Property="ItemsPanel"><ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate></Setter>
+      <Setter Property="Template"><ControlTemplate>
+        <Grid ColumnDefinitions="145,*" Background="{TemplateBinding Background}">
+          <ItemsPresenter x:Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}"/>
+          <Border Grid.Column="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,0,0,0">
+            <ContentPresenter x:Name="PART_SelectedContentHost" Content="{TemplateBinding SelectedContent}" ContentTemplate="{TemplateBinding SelectedContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+          </Border>
+        </Grid>
+      </ControlTemplate></Setter>
+    </Style>
+    <Style Selector="TabControl#SettingsPages > TabItem"><Setter Property="HorizontalAlignment" Value="Stretch"/><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Height" Value="34"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="12"/><Setter Property="MinHeight" Value="26"/><Setter Property="Height" Value="28"/><Setter Property="Padding" Value="8,4"/><Setter Property="Background" Value="{StaticResource Layer2}"/><Setter Property="BorderBrush" Value="{StaticResource Border2}"/><Setter Property="BorderThickness" Value="1,1,1,0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="Template"><ControlTemplate><Border x:Name="tabBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Margin="0,2,0,0"><ContentPresenter Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalContentAlignment="Center"/></Border></ControlTemplate></Setter>
+    </Style>
+    <Style Selector="TabItem:pointerover"><Setter Property="Background" Value="#3D3D4C"/><Setter Property="BorderBrush" Value="#585871"/></Style>
+    <Style Selector="TabItem:selected"><Setter Property="Background" Value="{StaticResource Layer3}"/><Setter Property="BorderBrush" Value="#484B60"/></Style>
+    <Style Selector="TabItem:selected /template/ Border#tabBorder"><Setter Property="Margin" Value="0,0,0,-1"/></Style>
+    <Style Selector="ListBox"><Setter Property="Background" Value="{StaticResource Layer3}"/><Setter Property="BorderThickness" Value="0"/></Style>
+    <Style Selector="ListBoxItem"><Setter Property="MinHeight" Value="22"/><Setter Property="Padding" Value="5,2"/><Setter Property="CornerRadius" Value="0"/></Style>
+    <Style Selector="TreeView"><Setter Property="Background" Value="Transparent"/><Setter Property="Padding" Value="0"/></Style>
+    <Style Selector="TreeViewItem"><Setter Property="MinHeight" Value="22"/><Setter Property="Padding" Value="2,1"/></Style>
+    <Style Selector="TreeViewItem /template/ ToggleButton">
+      <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Padding" Value="0"/><Setter Property="Width" Value="16"/><Setter Property="MinHeight" Value="20"/>
+      <Setter Property="Template"><ControlTemplate><Border Background="Transparent"><Path x:Name="chevron" Width="5" Height="8" Stretch="Fill" Data="M0 0 L5 4 L0 8 Z" Fill="#F0F0F0" VerticalAlignment="Center" HorizontalAlignment="Center" RenderTransformOrigin="50%,50%"/></Border></ControlTemplate></Setter>
+    </Style>
+    <Style Selector="TreeViewItem /template/ ToggleButton:checked /template/ Path#chevron"><Setter Property="RenderTransform"><RotateTransform Angle="90"/></Setter></Style>
+    <Style Selector="TextBox.code"><Setter Property="FontFamily" Value="{DynamicResource FModelCodeFont}"/><Setter Property="FontSize" Value="11"/><Setter Property="Background" Value="{StaticResource Layer2}"/><Setter Property="BorderThickness" Value="0"/></Style>
+  </Application.Styles>
+</Application>

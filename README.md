@@ -19,6 +19,9 @@ FModel is actively maintained and developed by a dedicated community of contribu
 ### Installation:
 For installation, follow the instructions from [here](https://github.com/4sval/FModel/wiki/Installing-FModel)
 
+### macOS:
+This fork includes a native Avalonia desktop port and a macOS app-bundle builder. See [build instructions, validation and the feature compatibility table](docs/macos.md). Full Windows/Snooper feature parity is still in progress.
+
 ### Sponsorship:
 <p>
   <a href="https://1password.com/">

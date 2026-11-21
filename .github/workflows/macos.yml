@@ -1,0 +1,43 @@
+name: macOS
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: Select runtime
+        id: runtime
+        run: |
+          if [ "$(uname -m)" = arm64 ]; then
+            echo "rid=osx-arm64" >> "$GITHUB_OUTPUT"
+          else
+            echo "rid=osx-x64" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build
+        run: dotnet build FModel/FModel.slnx -c Release --disable-build-servers -m:1 -p:NuGetAudit=false
+      - name: Integration checks
+        env:
+          FMODEL_DATA_DIR: ${{ runner.temp }}/FModel-validation
+        run: dotnet FModel/bin/Release/net10.0/FModel.dll --self-test "$GITHUB_WORKSPACE" "$RUNNER_TEMP/FModel-fixtures"
+      - name: UI regression checks
+        env:
+          FMODEL_DATA_DIR: ${{ runner.temp }}/FModel-ui-validation
+        run: dotnet FModel/bin/Release/net10.0/FModel.dll --ui-smoke-test "$RUNNER_TEMP/FModel-fixtures/UE6_0/IoStore" --headless
+      - name: Package
+        run: bash scripts/package-macos.sh '${{ steps.runtime.outputs.rid }}'
+      - name: Archive bundle
+        run: ditto -c -k --sequesterRsrc --keepParent 'dist/${{ steps.runtime.outputs.rid }}/FModel.app' 'dist/FModel-${{ steps.runtime.outputs.rid }}.zip'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FModel-${{ steps.runtime.outputs.rid }}
+          path: dist/FModel-${{ steps.runtime.outputs.rid }}.zip

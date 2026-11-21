@@ -1,0 +1,107 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>4.4.4.0</Version>
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifier></RuntimeIdentifier>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <StartupObject>FModel.Desktop.Program</StartupObject>
+    <UseWPF>false</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishSingleFile>false</PublishSingleFile>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="**/*.cs" />
+    <EmbeddedResource Remove="**/*.resx" />
+    <Compile Include="Desktop/**/*.cs" />
+    <Compile Include="ViewModels/StreamingLevelFilterViewModel.cs" />
+    <AvaloniaResource Include="Resources/**" />
+    <Content Include="Resources/Fonts/**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" TargetPath="Fonts/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Views/Resources/Icons.xaml" />
+    <EmbeddedResource Include="Resources/BurbankBigCondensed-Bold.ttf;Resources/T_Placeholder_Item_Image.png;Resources/npcleftside.png;Resources/T-Icon-Quests-64.png;Resources/T-Icon-Pets-64.png" LogicalName="FModel.CreatorAssets.%(Filename)%(Extension)" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Headless" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.23" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.1.5" />
+    <PackageReference Include="OpenTK.Graphics" Version="4.9.4" />
+    <PackageReference Include="NVorbis" Version="0.10.5" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.9" />
+    <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
+    <PackageReference Include="EpicManifestParser" Version="3.0.0-preview.1" />
+    <PackageReference Include="Svg.Skia" Version="[4.8.0]" />
+    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.3.8" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Conversion/CUE4Parse-Conversion.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)../../Snooper/Editor/Editor.csproj" />
+  </ItemGroup>
+  <Target Name="PrepareMacCosmeticRenderers" BeforeTargets="CoreCompile">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)../../Compatibility/prepare-live.py&quot; &quot;$(MSBuildThisFileDirectory)..&quot; &quot;$(IntermediateOutputPath)MacCreators/Live&quot;" />
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)../../Compatibility/prepare-creators.py&quot; &quot;$(MSBuildThisFileDirectory)..&quot; &quot;$(IntermediateOutputPath)MacCreators&quot;" />
+    <ItemGroup><Compile Include="$(IntermediateOutputPath)MacCreators/**/*.cs" /></ItemGroup>
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)../../Compatibility/prepare-asset-classification.py&quot; &quot;$(MSBuildThisFileDirectory)../ViewModels/GameFileViewModel.cs&quot; &quot;$(IntermediateOutputPath)MacCompatibility/AssetClassification.cs&quot;" />
+    <ItemGroup><Compile Include="$(IntermediateOutputPath)MacCompatibility/AssetClassification.cs" /></ItemGroup>
+  </Target>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <MacNativeInput Include="$(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/ACL/ACL.cpp;
+                             $(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/Features.cpp;
+                             $(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/ACL/includes/**/*.h;
+                             $(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/common/**/*.h;
+                             $(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/ACL/external/acl/includes/**/*.h;
+                             $(MSBuildThisFileDirectory)../../CUE4Parse/CUE4Parse-Natives/ACL/external/acl/external/rtm/includes/**/*.h;
+                             $(MSBuildThisFileDirectory)Native/MacAudio.m;
+                             $(MSBuildThisFileDirectory)../../scripts/build-macos-natives.sh" />
+  </ItemGroup>
+  <Target Name="BuildMacAnimationDecoder" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
+          Inputs="@(MacNativeInput)"
+          Outputs="$(IntermediateOutputPath)native/CUE4Parse-Natives.dylib;$(IntermediateOutputPath)native/libFModelAudio.dylib">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/build-macos-natives.sh&quot; &quot;$(IntermediateOutputPath)native&quot; &quot;$(RuntimeIdentifier)&quot;" />
+  </Target>
+  <Target Name="CopyMacAnimationDecoder" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="$(IntermediateOutputPath)native/CUE4Parse-Natives.dylib" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(IntermediateOutputPath)native/libFModelAudio.dylib" DestinationFolder="$(TargetDir)" />
+    <Copy SourceFiles="$(IntermediateOutputPath)native/vgmstream-cli;$(IntermediateOutputPath)native/vgmstream-COPYING.txt" DestinationFolder="$(TargetDir)" />
+  </Target>
+  <Target Name="PublishMacAnimationDecoder" AfterTargets="Publish" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="$(IntermediateOutputPath)native/CUE4Parse-Natives.dylib" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(IntermediateOutputPath)native/libFModelAudio.dylib" DestinationFolder="$(PublishDir)" />
+    <Copy SourceFiles="$(IntermediateOutputPath)native/vgmstream-cli;$(IntermediateOutputPath)native/vgmstream-COPYING.txt" DestinationFolder="$(PublishDir)" />
+  </Target>
+  <Target Name="BuildMacGameAudioDecoder" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
+          Inputs="$(MSBuildThisFileDirectory)../../scripts/build-macos-audio.sh;$(MSBuildThisFileDirectory)../../scripts/build-macos-ffmpeg.sh;$(MSBuildThisFileDirectory)../../Compatibility/prepare-vgmstream.py"
+          Outputs="$(IntermediateOutputPath)native/vgmstream-cli;$(IntermediateOutputPath)native/vgmstream-COPYING.txt;$(IntermediateOutputPath)native/libavcodec.62.dylib;$(IntermediateOutputPath)native/libavformat.62.dylib;$(IntermediateOutputPath)native/libavutil.60.dylib;$(IntermediateOutputPath)native/libswresample.6.dylib">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/build-macos-audio.sh&quot; &quot;$(IntermediateOutputPath)native&quot; &quot;$(RuntimeIdentifier)&quot;" />
+  </Target>
+  <Target Name="BuildMacSnooperRenderer" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
+          Inputs="$(MSBuildThisFileDirectory)../../scripts/build-macos-snooper.sh;$(MSBuildThisFileDirectory)../../Compatibility/prepare-mesa.py;$(MSBuildThisFileDirectory)../../Compatibility/MesaSmoke.c"
+          Outputs="$(IntermediateOutputPath)native/libOSMesa.dylib;$(IntermediateOutputPath)native/Mesa-LICENSES.txt">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/build-macos-snooper.sh&quot; &quot;$(IntermediateOutputPath)native&quot; &quot;$(RuntimeIdentifier)&quot;" />
+  </Target>
+  <Target Name="BuildMacTextureDecoders" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
+          Inputs="$(MSBuildThisFileDirectory)../../scripts/build-macos-textures.sh;$(MSBuildThisFileDirectory)../../Compatibility/prepare-crunch.py;$(MSBuildThisFileDirectory)../../Compatibility/CrunchBridge.cpp;$(MSBuildThisFileDirectory)../../Compatibility/Include/malloc.h;$(MSBuildThisFileDirectory)../../Compatibility/TegraBridge.rs"
+          Outputs="$(IntermediateOutputPath)native/libcrunch.dylib;$(IntermediateOutputPath)native/libtegra_swizzle_x64.dylib">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/build-macos-textures.sh&quot; &quot;$(IntermediateOutputPath)native&quot; &quot;$(RuntimeIdentifier)&quot;" />
+  </Target>
+  <Target Name="BuildMacLuaDecompiler" BeforeTargets="CoreCompile" Condition="$([MSBuild]::IsOSPlatform('OSX'))"
+          Inputs="$(MSBuildThisFileDirectory)../../scripts/build-macos-lua.sh"
+          Outputs="$(IntermediateOutputPath)native/libunluac.dylib;$(IntermediateOutputPath)native/Unluac-LICENSES.txt">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../../scripts/build-macos-lua.sh&quot; &quot;$(IntermediateOutputPath)native&quot; &quot;$(RuntimeIdentifier)&quot;" />
+  </Target>
+  <Target Name="CollectMacRendererFiles" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <ItemGroup>
+      <MacRendererFile Include="$(IntermediateOutputPath)native/libunluac.dylib;$(IntermediateOutputPath)native/Unluac-LICENSES.txt" />
+      <MacRendererFile Include="$(IntermediateOutputPath)native/libav*.dylib;$(IntermediateOutputPath)native/libswresample*.dylib;$(IntermediateOutputPath)native/FFmpeg-LICENSE.txt" />
+      <MacRendererFile Include="$(IntermediateOutputPath)native/libOSMesa.dylib;$(IntermediateOutputPath)native/libglapi.0.dylib;$(IntermediateOutputPath)native/libLLVM.dylib;$(IntermediateOutputPath)native/libzstd.1.dylib;$(IntermediateOutputPath)native/libz3.4.14.dylib;$(IntermediateOutputPath)native/Mesa-LICENSES.txt;$(IntermediateOutputPath)native/LLVM-LICENSE.txt;$(IntermediateOutputPath)native/zstd-LICENSE.txt;$(IntermediateOutputPath)native/Z3-LICENSE.txt;$(IntermediateOutputPath)native/libcrunch.dylib;$(IntermediateOutputPath)native/libtegra_swizzle_x64.dylib;$(IntermediateOutputPath)native/tegra_swizzle-LICENSE.txt;$(IntermediateOutputPath)native/Crunch-LICENSE.txt" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyMacSnooperRenderer" AfterTargets="Build" DependsOnTargets="CollectMacRendererFiles" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="@(MacRendererFile)" DestinationFolder="$(TargetDir)" OverwriteReadOnlyFiles="true" Condition="Exists('%(MacRendererFile.Identity)')" />
+  </Target>
+  <Target Name="PublishMacSnooperRenderer" AfterTargets="Publish" DependsOnTargets="CollectMacRendererFiles" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="@(MacRendererFile)" DestinationFolder="$(PublishDir)" OverwriteReadOnlyFiles="true" Condition="Exists('%(MacRendererFile.Identity)')" />
+  </Target>
+</Project>

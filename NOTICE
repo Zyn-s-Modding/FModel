@@ -3,9 +3,16 @@ This software includes material developed by the following third-party libraries
 - Adonis UI (https://github.com/benruehl/adonis-ui/blob/master/LICENSE) - Copyright (c) 2018 Benjamin Rühl. Licensed under the MIT License.
 - AutoUpdater.NET (https://github.com/ravibpatel/AutoUpdater.NET/blob/master/LICENSE) - Copyright (c) 2012-2023 RBSoft. Licensed under the MIT License.
 - AvalonEdit (https://github.com/icsharpcode/AvalonEdit/blob/master/LICENSE) - Copyright (c) AvalonEdit Contributors. Licensed under the MIT License.
+- Avalonia (https://github.com/AvaloniaUI/Avalonia/blob/master/licence.md) - Copyright AvaloniaUI contributors. Licensed under the MIT License.
+- AvaloniaEdit (https://github.com/AvaloniaUI/AvaloniaEdit) - Copyright AvalonEdit and AvaloniaEdit contributors. Licensed under the MIT License.
+- Selawik (https://github.com/microsoft/Selawik) - Copyright Microsoft Corporation. Licensed under SIL Open Font License 1.1, included with the bundled fonts.
+- Mesa (https://archive.mesa3d.org/mesa-24.3.4.tar.xz) and LLVM 19.1.7 - Licenses included beside the macOS renderer as Mesa-LICENSES.txt and LLVM-LICENSE.txt.
+- tegra_swizzle (https://github.com/ScanMountGoat/tegra_swizzle) - MIT License, included as tegra_swizzle-LICENSE.txt.
+- Crunch (https://github.com/BinomialLLC/crunch) - Public domain dedication and fallback terms included as Crunch-LICENSE.txt.
 - CSCore (https://github.com/filoe/cscore/blob/master/license.md) - Licensed under the MS-PL License.
 - CUE4Parse (https://github.com/FabianFG/CUE4Parse/blob/master/LICENSE) - Copyright 2023 CUE4Parse Contributors. Licensed under the Apache License 2.0.
 - DiscordRichPresence (https://github.com/Lachee/discord-rpc-csharp/blob/master/LICENSE) - Copyright (c) 2021 Lachee. Licensed under the MIT License.
+- DiscordRichPresence (https://github.com/Lachee/discord-rpc-csharp) - MIT License. Original FModel Discord IPC service reused on macOS.
 - EpicManifestParser (https://github.com/NotOfficer/EpicManifestParser/blob/master/LICENSE) - Copyright (c) 2020 NotOfficer. Licensed under the MIT License.
 - ImGui.NET (https://github.com/mellinoe/ImGui.NET/blob/master/LICENSE) - Copyright (c) 2017 Eric Mellino and ImGui.NET contributors. Licensed under the MIT License.
 - K4os.Compression.LZ4 (https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE) - Copyright (c) 2017 Milosz Krajewski. Licensed under the MIT License.
@@ -19,6 +26,14 @@ This software includes material developed by the following third-party libraries
 - SixLabors.ImageSharp (https://github.com/SixLabors/ImageSharp/blob/main/LICENSE) - Copyright (c) Six Labors. Licensed under the Apache License 2.0.
 - SkiaSharp (https://github.com/mono/SkiaSharp/blob/main/LICENSE.md) - Copyright (c) 2015-2016 Xamarin, Inc. & 2017-2018 Microsoft Corporation. Licensed under the MIT License.
 - VirtualizingWrapPanel (https://github.com/sbaeumlisberger/VirtualizingWrapPanel/blob/master/LICENSE) - Copyright (c) 2019 S. Bäumlisberger. Licensed under the MIT License.
+- vgmstream (https://github.com/vgmstream/vgmstream/blob/24ffd6ce3e1f34fdebf9f5316d18ad2e162838ce/COPYING) - Copyright vgmstream contributors. Its permissive license is included as vgmstream-COPYING.txt beside the macOS decoder.
+
+
+- FFmpeg 8.0.1 (https://github.com/FFmpeg/FFmpeg/tree/n8.0.1) - Shared audio-only LGPL 2.1 build. FFmpeg-LICENSE.txt is bundled. Reproducible source download and build options are in scripts/build-macos-ffmpeg.sh.
+- vgmstream optional audio dependencies - mpg123, Ogg/Vorbis, CELT, Speex, libatrac9, libg7221 and libg719. Dependency licenses are bundled beside vgmstream-cli.
+- unluac (https://github.com/FModel/unluac/tree/v1.0.0) - Original MIT-licensed decompiler. Native images are built with GraalVM Community JDK 21.0.2. Unluac-LICENSES.txt includes the upstream and native-image runtime license notices.
+- Svg.Skia (https://github.com/wieslawsoltes/Svg.Skia) - MIT License. Used for original SVG previews.
+- EpicManifestParser (https://github.com/NotOfficer/EpicManifestParser) - MIT License. Used for original Fortnite live manifests.
 
 ---------------------------------------------------------------------------
 

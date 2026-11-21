@@ -1,0 +1,147 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:FModel.Desktop" x:Class="FModel.Desktop.MainWindow"
+        Title="FModel" MinWidth="900" MinHeight="600" Width="1280" Height="820"
+        WindowStartupLocation="CenterScreen" DragDrop.AllowDrop="True">
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Background="#2A2B34">
+      <Menu x:Name="MainMenu">
+        <MenuItem Header="Directory">
+          <MenuItem Header="Selector" Click="SelectDirectory" InputGesture="Meta+O"/>
+          <MenuItem Header="AES" Click="OpenAes"/>
+          <MenuItem Header="Backup" Click="OpenBackups"/>
+          <MenuItem Header="Archives Info" Click="ShowArchiveInfo"/>
+        </MenuItem>
+        <MenuItem Header="Packages">
+          <MenuItem Header="Search" Click="OpenSearch" InputGesture="Meta+Shift+F"/>
+          <MenuItem Header="References" Click="FindReferences"/>
+          <MenuItem x:Name="FavoritesMenu" Header="Favorite Directories"/>
+        </MenuItem>
+        <MenuItem Header="Views">
+          <MenuItem Header="3D Viewer" Click="OpenSnooper"/>
+          <MenuItem Header="Export Session" Click="OpenExports"/>
+          <MenuItem Header="Audio Player" Click="OpenAudio"/>
+          <MenuItem Header="Image Merger" Click="OpenImageMerger"/>
+        </MenuItem>
+        <MenuItem Header="Settings" Click="OpenSettings"/>
+        <MenuItem Header="Help">
+          <MenuItem Header="Donate" Click="Donate"/>
+          <MenuItem Header="Releases" Click="Releases"/>
+          <MenuItem Header="Bugs Report" Click="Bugs"/>
+          <MenuItem Header="Discord Server" Click="Discord"/>
+          <MenuItem Header="About FModel" Click="About"/>
+        </MenuItem>
+      </Menu>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0">
+        <TextBlock x:Name="GameTitle" IsVisible="False"/>
+        <TextBlock Text="Preview New Explorer System" VerticalAlignment="Center"/>
+        <ToggleSwitch x:Name="NewExplorer" IsChecked="True" OnContent="" OffContent="" MinHeight="0" Height="24" Margin="5,0,0,0" IsCheckedChanged="NewExplorerChanged"/>
+      </StackPanel>
+    </Grid>
+    <Grid x:Name="MainContent" Grid.Row="1" ColumnDefinitions="400,4,*" Margin="0,8,0,0">
+      <TabControl x:Name="LeftTabs" Grid.Column="0">
+        <TabItem Header="Archives">
+          <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+            <Grid ColumnDefinitions="Auto,*" Margin="3,6"><TextBlock Text="Loading Mode" VerticalAlignment="Center" Margin="0,0,10,0"/><ComboBox x:Name="LoadingMode" Grid.Column="1" HorizontalAlignment="Stretch"/></Grid>
+            <Button Grid.Row="1" Content="Load" Click="LoadSelectedArchives" HorizontalAlignment="Stretch" Margin="3"/>
+            <local:SectionHeader Grid.Row="2" Text="GAME ARCHIVES"/>
+            <ListBox Grid.Row="3" x:Name="ArchiveList" SelectionMode="Multiple" SelectionChanged="ArchiveSelected">
+              <ListBox.ItemTemplate><DataTemplate><Grid ColumnDefinitions="20,*,75"><TextBlock Text="{Binding State}"/><TextBlock Grid.Column="1" Text="{Binding Name}" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="2" Text="{Binding Size}" HorizontalAlignment="Right" Foreground="#AAAAAA"/></Grid></DataTemplate></ListBox.ItemTemplate>
+            </ListBox>
+            <local:SectionHeader Grid.Row="4" Text="INFORMATION"/>
+            <local:InformationPanel Grid.Row="5" x:Name="ArchiveInfo" Margin="0,0,0,5" Text="Select a directory to load Unreal Engine archives."/>
+          </Grid>
+        </TabItem>
+        <TabItem Header="Folders">
+          <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+            <Grid ColumnDefinitions="*,Auto,Auto"><TextBlock x:Name="FolderSummary" Text="Select a folder" VerticalAlignment="Center" Margin="5" TextTrimming="CharacterEllipsis"/><Button x:Name="LocateFolderButton" Grid.Column="1" Classes="icon toolbar" Click="LocateFolder" ToolTip.Tip="Bring Selected Folder To View"/><Button x:Name="CollapseFolderButton" Grid.Column="2" Classes="icon toolbar" Click="CollapseFolders" ToolTip.Tip="Collapse All"/></Grid>
+            <TextBox Grid.Row="1" x:Name="FolderFilter" Watermark="Filter folders..." Margin="3,6" TextChanged="FilterFolders"/>
+            <TreeView Grid.Row="2" x:Name="FolderTree" SelectionChanged="FolderSelected">
+              <TreeView.ItemTemplate><TreeDataTemplate ItemsSource="{Binding Children}"><StackPanel Orientation="Horizontal" Spacing="6"><Image Width="16" Height="16" Source="avares://FModel/Resources/folder.png"/><TextBlock Text="{Binding Name}"/></StackPanel></TreeDataTemplate></TreeView.ItemTemplate>
+            </TreeView>
+            <local:SectionHeader Grid.Row="3" Text="INFORMATION"/>
+            <local:InformationPanel Grid.Row="4" x:Name="FolderInfo" Margin="0,0,0,5"/>
+          </Grid>
+        </TabItem>
+        <TabItem><TabItem.Header><TextBlock x:Name="PackageCount" Text="0 Packages"/></TabItem.Header>
+          <Grid RowDefinitions="Auto,*,Auto">
+            <TextBox x:Name="PackageFilter" Watermark="Filter assets in current folder..." Margin="3,6" TextChanged="FilterAssets"/>
+            <ListBox Grid.Row="1" x:Name="PackageList" SelectionMode="Multiple" DoubleTapped="PackageOpened" SelectionChanged="AssetSelected">
+              <ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Name}"/></DataTemplate></ListBox.ItemTemplate>
+            </ListBox>
+            <local:InformationPanel Grid.Row="2" x:Name="AssetInfo" Margin="0,8,0,5"/>
+          </Grid>
+        </TabItem>
+      </TabControl>
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="#2A2B34"/>
+      <Grid x:Name="PropertyAndConsole" Grid.Column="2" RowDefinitions="*,4,125">
+        <Grid Grid.Row="0">
+        <Grid x:Name="ExplorerPanel" RowDefinitions="Auto,Auto,*" Background="#262630" Margin="0">
+          <Grid ColumnDefinitions="*,5,150,5,Auto" Margin="10,10,10,0">
+            <TextBox x:Name="ExplorerFilter" Watermark="Filter assets in current folder..." TextChanged="FilterAssets"/>
+            <ComboBox x:Name="AssetCategory" Grid.Column="2" HorizontalAlignment="Stretch" SelectionChanged="AssetCategoryChanged"/>
+            <StackPanel Grid.Column="4" Orientation="Horizontal">
+              <ComboBox x:Name="ExplorerView" IsVisible="False" SelectionChanged="ExplorerViewChanged"><ComboBoxItem Content="Grid"/><ComboBoxItem Content="List"/></ComboBox>
+              <ToggleButton x:Name="GridViewButton" Content="▦" Width="32" Height="28" IsChecked="True" Click="ChooseGridView" ToolTip.Tip="Grid View"/>
+              <ToggleButton x:Name="ListViewButton" Content="☷" Width="32" Height="28" Click="ChooseListView" ToolTip.Tip="List View"/>
+            </StackPanel>
+          </Grid>
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Margin="10,5,10,8">
+          <Button Classes="icon" Content="↑" Click="ParentFolder" ToolTip.Tip="Parent Directory"/>
+          <TextBlock x:Name="Breadcrumb" IsVisible="False" Text="/"/>
+          <StackPanel x:Name="BreadcrumbBar" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        </Grid>
+        <ListBox Grid.Row="2" x:Name="Explorer" IsVisible="False" SelectionMode="Multiple" DoubleTapped="ExplorerOpened" SelectionChanged="AssetSelected">
+          <ListBox.ItemTemplate>
+            <DataTemplate><Grid ColumnDefinitions="*,70,90" Margin="3,1"><TextBlock Text="{Binding Name}"/><TextBlock Grid.Column="1" Text="{Binding Type}" Foreground="#AAAAAA"/><TextBlock Grid.Column="2" Text="{Binding Size}" HorizontalAlignment="Right"/></Grid></DataTemplate>
+          </ListBox.ItemTemplate>
+
+        </ListBox>
+        <local:AssetGrid x:Name="TileExplorer" Grid.Row="2" Margin="10,0,10,10"/>
+        </Grid>
+        <TabControl x:Name="Documents" IsVisible="False">
+          <TabControl.Template><ControlTemplate>
+            <Grid RowDefinitions="Auto,*" Background="{TemplateBinding Background}">
+              <Grid ColumnDefinitions="*,Auto">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" MaxHeight="40">
+                  <ItemsPresenter x:Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}"/>
+                </ScrollViewer>
+                <Button Grid.Column="1" Content="+" Classes="icon toolbar" Width="28" Height="28" Click="AddAssetTab" ToolTip.Tip="Add Tab"/>
+              </Grid>
+              <Border Grid.Row="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="5">
+                <ContentPresenter x:Name="PART_SelectedContentHost" Content="{TemplateBinding SelectedContent}" ContentTemplate="{TemplateBinding SelectedContentTemplate}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+              </Border>
+            </Grid>
+          </ControlTemplate></TabControl.Template>
+        </TabControl>
+        <Border x:Name="ExplorerTools" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="12" Background="#DD32323F" CornerRadius="8" Padding="4">
+          <StackPanel Orientation="Horizontal" Spacing="2">
+            <ToggleButton x:Name="BrowserToggle" Content="▦" Width="32" Height="32" IsChecked="True" IsCheckedChanged="ToggleBrowser" ToolTip.Tip="Asset Explorer"/>
+            <ToggleButton x:Name="TexturePreviewToggle" Content="▧" Width="32" Height="32" IsChecked="True" IsCheckedChanged="TexturePreviewChanged" ToolTip.Tip="Preview Textures"/>
+          </StackPanel>
+        </Border>
+        </Grid>
+        <GridSplitter Grid.Row="1" ResizeDirection="Rows" Background="#2A2B34"/>
+        <Grid Grid.Row="2" RowDefinitions="16,*" Background="#32323F">
+          <Button x:Name="LogToggle" Classes="toolbar" Width="30" Height="16" MinHeight="0" Padding="0" HorizontalAlignment="Center" Content="⌃" Click="ToggleLog" ToolTip.Tip="Show or Hide Console"/>
+          <Grid x:Name="LogBody" Grid.Row="1" ColumnDefinitions="*,24">
+            <TextBox x:Name="LogView" Classes="code" Margin="0,0,24,0" Grid.ColumnSpan="2" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+              <Button x:Name="OutputFolderButton" Classes="icon toolbar" Click="OpenOutput" ToolTip.Tip="Open Output Folder"/>
+              <Button x:Name="ClearLogsButton" Classes="icon toolbar" Click="ClearLogs" ToolTip.Tip="Clear Logs"/>
+            </StackPanel>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto,Auto" RowDefinitions="Auto,Auto" Background="#206BD4">
+      <DockPanel x:Name="ViewerRequestPanel" Grid.ColumnSpan="3" IsVisible="False" Background="#254976">
+        <Button DockPanel.Dock="Right" Content="Cancel Request" Click="CancelViewerRequest"/>
+        <TextBlock x:Name="ViewerRequest" Margin="8" VerticalAlignment="Center"/>
+      </DockPanel>
+      <TextBlock Grid.Row="1" x:Name="Status" Text="Ready" Margin="8,5"/>
+      <Button Grid.Row="1" Grid.Column="3" x:Name="ExportQueueButton" IsVisible="False" Click="OpenExports" Margin="4,0" ToolTip.Tip="Export Session"/>
+      <ProgressBar Grid.Row="1" x:Name="BusyProgress" Grid.Column="1" Width="160" IsIndeterminate="True" IsVisible="False" Height="3" Margin="8"/>
+      <Button Grid.Row="1" x:Name="CancelButton" Grid.Column="2" Content="Cancel" IsVisible="False" Click="Cancel"/>
+    </Grid>
+  </Grid>
+</Window>

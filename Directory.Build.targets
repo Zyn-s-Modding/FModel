@@ -1,0 +1,53 @@
+<Project>
+  <!-- Keep upstream CUE4Parse untouched. Its default native target needs CMake;
+       the macOS application builds ACL with the Xcode command line toolchain. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <CUE4PARSE_SKIP_NATIVE>true</CUE4PARSE_SKIP_NATIVE>
+  </PropertyGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse-Conversion'">
+    <Compile Remove="Textures/TextureNativeLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Compatibility/TextureNativeLibrary.cs" Link="Textures/TextureNativeLibrary.cs" />
+  </ItemGroup>
+  <Target Name="GenerateMacNaniteCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse'"
+          Inputs="$(MSBuildThisFileDirectory)Compatibility/prepare-cue4parse.py;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse/UE4/Assets/Exports/Nanite/NaniteResources.cs"
+          Outputs="$(IntermediateOutputPath)MacCompatibility/NaniteResources.cs">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)Compatibility/prepare-cue4parse.py&quot; &quot;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse/UE4/Assets/Exports/Nanite/NaniteResources.cs&quot; &quot;$(IntermediateOutputPath)MacCompatibility/NaniteResources.cs&quot;" />
+  </Target>
+  <Target Name="GenerateMacTextureCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse-Conversion'"
+          Inputs="$(MSBuildThisFileDirectory)Compatibility/prepare-textures.py;$(MSBuildThisFileDirectory)Compatibility/prepare-crunch-managed.py;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/Textures/PlatformDeswizzlers.cs;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/Textures/Crunch/CrunchDecoder.cs"
+          Outputs="$(IntermediateOutputPath)MacCompatibility/PlatformDeswizzlers.cs;$(IntermediateOutputPath)MacCompatibility/CrunchDecoder.cs">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)Compatibility/prepare-textures.py&quot; &quot;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/Textures/PlatformDeswizzlers.cs&quot; &quot;$(IntermediateOutputPath)MacCompatibility/PlatformDeswizzlers.cs&quot;" />
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)Compatibility/prepare-crunch-managed.py&quot; &quot;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/Textures/Crunch/CrunchDecoder.cs&quot; &quot;$(IntermediateOutputPath)MacCompatibility/CrunchDecoder.cs&quot;" />
+  </Target>
+  <Target Name="UseMacTextureCompatibility" BeforeTargets="CoreCompile" DependsOnTargets="GenerateMacTextureCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse-Conversion'">
+    <ItemGroup>
+      <Compile Remove="Textures/PlatformDeswizzlers.cs" />
+      <Compile Include="$(IntermediateOutputPath)MacCompatibility/PlatformDeswizzlers.cs" />
+      <Compile Remove="Textures/Crunch/CrunchDecoder.cs" />
+      <Compile Include="$(IntermediateOutputPath)MacCompatibility/CrunchDecoder.cs" />
+    </ItemGroup>
+  </Target>
+  <Target Name="GenerateMacExportSessionCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse-Conversion'"
+          Inputs="$(MSBuildThisFileDirectory)Compatibility/prepare-export-session.py;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/ExportSession.cs"
+          Outputs="$(IntermediateOutputPath)MacCompatibility/ExportSession.cs">
+    <Exec Command="python3 &quot;$(MSBuildThisFileDirectory)Compatibility/prepare-export-session.py&quot; &quot;$(MSBuildThisFileDirectory)CUE4Parse/CUE4Parse-Conversion/ExportSession.cs&quot; &quot;$(IntermediateOutputPath)MacCompatibility/ExportSession.cs&quot;" />
+  </Target>
+  <Target Name="UseMacExportSessionCompatibility" BeforeTargets="CoreCompile" DependsOnTargets="GenerateMacExportSessionCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse-Conversion'">
+    <ItemGroup>
+      <Compile Remove="ExportSession.cs" />
+      <Compile Include="$(IntermediateOutputPath)MacCompatibility/ExportSession.cs" />
+    </ItemGroup>
+  </Target>
+  <Target Name="UseMacNaniteCompatibility" BeforeTargets="CoreCompile" DependsOnTargets="GenerateMacNaniteCompatibility"
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) and '$(MSBuildProjectName)' == 'CUE4Parse'">
+    <ItemGroup>
+      <Compile Remove="UE4/Assets/Exports/Nanite/NaniteResources.cs" />
+      <Compile Include="$(IntermediateOutputPath)MacCompatibility/NaniteResources.cs" />
+    </ItemGroup>
+  </Target>
+</Project>
